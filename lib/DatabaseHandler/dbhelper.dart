@@ -60,10 +60,9 @@ class DbHelper {
 
   Future<UserModel?> getLoginUser(String userId, String password) async {
     var dbClient = await db;
-    var res = await dbClient.rawQuery("SELECT * FROM $Table_User WHERE"
-        "$C_UserID = '$userId' AND"
-        "$C_Password = '$password'"
-    );
+    var res = await dbClient.rawQuery("SELECT * FROM $Table_User WHERE "
+        "$C_UserID = '$userId' AND "
+        "$C_Password = '$password'");
 
     if(res.isNotEmpty) {
       return UserModel.fromMap(res.first);
@@ -72,6 +71,6 @@ class DbHelper {
     return null;
   }
 }
-////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
+
 
 

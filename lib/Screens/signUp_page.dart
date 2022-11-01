@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../DatabaseHandler/dbhelper.dart';
 import '../common/genTextformfield.dart';
+import 'HomeForm.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -55,6 +56,10 @@ class _SignUpPageState extends State<SignUpPage> {
         await dbHelper.saveData(uModel).then((userData){
           //alertDialog(context, 'Successfully Saved');
          showToast(context, 'Successfully Saved');
+
+         Navigator.push(
+             context,
+             MaterialPageRoute(builder: (_) => LoginPage()));
         }).catchError((error){
           print(error);
           //alertDialog(context, 'Error: Data Save FAIL');

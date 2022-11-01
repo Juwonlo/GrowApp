@@ -36,12 +36,15 @@ class _LoginPageState extends State<LoginPage> {
       //alertDialog(context, 'Please Enter Password');
       showToast(context, 'Please Enter Password');
     }else {
-        await dbHelper.getLoginUser(uid,passed).then((userData){
-          print(userData.email);
-            Navigator.pushAndRemoveUntil(context,
-                MaterialPageRoute(builder: (_)=> HomeForm()),
-                    (Route<dynamic> route) => false);
-
+        await dbHelper.getLoginUser(uid,passed).then((userData) {
+          if (userData != null) {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => HomeForm()),
+                  (Route<dynamic> route) => false);
+        } else {
+          showToast(context, 'Error: User Not Found');
+        }
         }).catchError((error){
           print(error);
           //alertDialog(context, "Error: Login FAIL");
@@ -88,9 +91,9 @@ class _LoginPageState extends State<LoginPage> {
                       color: Colors.green,
                       borderRadius: BorderRadius.circular(30),
                     ),
-                    child: const TextButton(
-                        onPressed: null,
-                        child: Text('Login',
+                    child:  TextButton(
+                        onPressed: login,
+                        child: const Text('Login',
                         style: TextStyle(color: Colors.white),
                         ),
                     ),
