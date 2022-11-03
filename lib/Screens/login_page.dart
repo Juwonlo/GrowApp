@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:registration_sql/Model/UserModel.dart';
 import 'package:registration_sql/Screens/signUp_page.dart';
 import 'package:registration_sql/common/loginsignupHeader.dart';
 import 'package:registration_sql/common/toastHelper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../DatabaseHandler/dbhelper.dart';
 import '../common/genTextformfield.dart';
 import 'HomeForm.dart';
@@ -15,6 +17,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  final Future<SharedPreferences> _pref = SharedPreferences.getInstance();
   final _formKey = GlobalKey<FormState>();
   final _conUserid = TextEditingController();
   final _conPassword = TextEditingController();
@@ -38,10 +42,14 @@ class _LoginPageState extends State<LoginPage> {
     }else {
         await dbHelper.getLoginUser(uid,passed).then((userData) {
           if (userData != null) {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (_) => HomeForm()),
-                  (Route<dynamic> route) => false);
+
+            setSP(userData).whenComplete((){
+
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => HomeForm()),
+                      (Route<dynamic> route) => false);
+            });
         } else {
           showToast(context, 'Error: User Not Found');
         }
@@ -51,6 +59,16 @@ class _LoginPageState extends State<LoginPage> {
           showToast(context, 'Error: Login FAIL');
         });
     }
+  }
+
+
+  Future setSP(UserModel user)  async{
+      final SharedPreferences sp = await _pref;
+
+      sp.setString("user_id", user.user_id);
+      sp.setString("user_name", user.user_name);
+      sp.setString("email", user.email);
+      sp.setString("password", user.password);
   }
 
   @override
