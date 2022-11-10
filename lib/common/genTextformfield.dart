@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:registration_sql/common/toastHelper.dart';
 
@@ -7,6 +9,7 @@ class getTextFormField extends StatelessWidget {
   IconData icon;
   bool isObscureText;
   TextInputType inputType;
+  bool isEnable;
 
   
   getTextFormField({Key? key,
@@ -15,6 +18,7 @@ class getTextFormField extends StatelessWidget {
     required this.icon,
     this.isObscureText = false,
     this.inputType = TextInputType.text,
+    this.isEnable = true,
   }) : super(key: key);
 
   @override
@@ -24,6 +28,7 @@ class getTextFormField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         obscureText: isObscureText,
+        enabled: isEnable,
         keyboardType: inputType,
         validator: (value) {
           if (value!.isEmpty) {

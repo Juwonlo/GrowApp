@@ -70,8 +70,15 @@ class DbHelper {
 
     return null;
   }
+
+  Future<int> updateUser(UserModel user) async {
+    var dbClient = await db;
+    var res = await dbClient.update(Table_User, user.toMap(),
+      where: '$C_UserID = ?', whereArgs: [user.user_id]);
+
+    return res;
+  }
 }
 
 //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
-
 
