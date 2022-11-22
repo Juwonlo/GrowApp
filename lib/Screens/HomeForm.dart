@@ -19,7 +19,7 @@ class _HomeFormState extends State<HomeForm> {
 
   late DbHelper dbHelper;
   final _formKey = GlobalKey<FormState>();
-  final _conUserid = TextEditingController();
+  final _conDelUserid = TextEditingController();
   final _conUserName = TextEditingController();
   final _conEmail = TextEditingController();
   final _conPassword = TextEditingController();
@@ -37,7 +37,7 @@ class _HomeFormState extends State<HomeForm> {
     final SharedPreferences sp = await _pref;
     
     setState(() {
-      _conUserid.text = sp.getString("user_id")!;
+      _conDelUserid.text = sp.getString("user_id")!;
       _conUserName.text = sp.getString("user_name")!;
       _conEmail.text = sp.getString("email")!;
       _conPassword.text = sp.getString("password")!;
@@ -47,7 +47,7 @@ class _HomeFormState extends State<HomeForm> {
 
   update() async {
 
-    String uid = _conUserid.text;
+    String uid = _conDelUserid.text;
     String uname = _conUserName.text;
     String email = _conEmail.text;
     String passed = _conPassword.text;
@@ -62,7 +62,7 @@ class _HomeFormState extends State<HomeForm> {
         if (value == 1) {
           showToast(context, 'Successfully Updated');
 
-          updateSP(user).whenComplete((){
+          updateSP(user, true).whenComplete((){
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (_) => LoginPage()),
@@ -81,15 +81,38 @@ class _HomeFormState extends State<HomeForm> {
 
   }
 
-  updateSP(UserModel user) async{
+  Future updateSP(UserModel user, bool add) async{
 
     final SharedPreferences sp = await _pref;
 
-    sp.setString("user_id", user.user_id);
-    sp.setString("user_name", user.user_name);
-    sp.setString("email", user.email);
-    sp.setString("password", user.password);
+    if (add){
+      sp.setString("user_name", user.user_name);
+      sp.setString("email", user.email);
+      sp.setString("password", user.password);
+    }else{
+      sp.remove('user_id');
+      sp.remove('user_name');
+      sp.remove('email');
+      sp.remove('password');
+    }
   }
+
+   // delete() async{
+   //  String delUserID = _conDelUserid.text;
+   //
+   //  await dbHelper.deleteUser(delUserID).then((value) {
+   //    if (value == 1) {
+   //      showToast(context, "Successfully Deleted");
+   //
+   //      updateSP(, false).whenComplete(() {
+   //        Navigator.pushAndRemoveUntil(
+   //            context,
+   //            MaterialPageRoute(builder: (_) => LoginPage()),
+   //                (Route<dynamic> route) => false);
+   //      });
+   //    }
+   //  });
+   //  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,8 +129,9 @@ class _HomeFormState extends State<HomeForm> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                ///UPDATE FEATURES
                 getTextFormField(
-                    controller: _conUserid,
+                    controller: _conDelUserid,
                     hintName: 'User ID',
                     icon: Icons.person,
                   isEnable: false,
@@ -146,6 +170,32 @@ class _HomeFormState extends State<HomeForm> {
                 ),
               ),
             ),
+
+              ///DELETE FEATURES
+                getTextFormField(
+                  controller: _conDelUserid,
+                  hintName: 'User ID',
+                  icon: Icons.person,
+                  isEnable: false,
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  height: 50,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child:  TextButton(
+                  onPressed: null,
+                  //delete,
+                    child:  const Text(
+                      'Delete',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+
                   ],
                 ),
             ),

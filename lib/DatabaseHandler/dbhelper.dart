@@ -75,10 +75,19 @@ class DbHelper {
     var dbClient = await db;
     var res = await dbClient.update(Table_User, user.toMap(),
       where: '$C_UserID = ?', whereArgs: [user.user_id]);
-
+    print(res);
     return res;
   }
+  
+  Future<int> deleteUser(String user_id) async {
+      var dbClient = await db;
+      var res = await dbClient.delete(
+        Table_User, where: '$C_UserID = ?' ,whereArgs: [user_id]);
+      print(res);
+      return res;
+  }
+
 }
 
-//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
+//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
 
