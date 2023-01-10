@@ -80,6 +80,28 @@ class _HomeFormState extends State<HomeForm> {
     }
 
   }
+  delete() async{
+   String uid = _conDelUserid.text;
+   String uname = _conUserName.text;
+   String email = _conEmail.text;
+   String passed = _conPassword.text;
+
+   UserModel delUser = UserModel( uid, uname , email, passed);
+   await dbHelper.deleteUser(uid).then((value) {
+     if (value == 0) {
+       showToast(context, "Successfully Deleted");
+
+       updateSP(delUser, false).whenComplete(() {
+         Navigator.pushAndRemoveUntil(
+             context,
+             MaterialPageRoute(builder: (_) => LoginPage()),
+                 (Route<dynamic> route) => false);
+       });
+     }else {
+       showToast(context, 'Error: Delete Failed');
+     }
+   });
+   }
 
   Future updateSP(UserModel user, bool add) async{
 
@@ -97,22 +119,7 @@ class _HomeFormState extends State<HomeForm> {
     }
   }
 
-   // delete() async{
-   //  String delUserID = _conDelUserid.text;
-   //
-   //  await dbHelper.deleteUser(delUserID).then((value) {
-   //    if (value == 1) {
-   //      showToast(context, "Successfully Deleted");
-   //
-   //      updateSP(, false).whenComplete(() {
-   //        Navigator.pushAndRemoveUntil(
-   //            context,
-   //            MaterialPageRoute(builder: (_) => LoginPage()),
-   //                (Route<dynamic> route) => false);
-   //      });
-   //    }
-   //  });
-   //  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -126,78 +133,81 @@ class _HomeFormState extends State<HomeForm> {
         child: Container(
           margin: const EdgeInsets.only(top: 20.0,),
           child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ///UPDATE FEATURES
-                getTextFormField(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ///UPDATE FEATURES
+                  getTextFormField(
+                      controller: _conDelUserid,
+                      hintName: 'User ID',
+                      icon: Icons.person,
+                    isEnable: false,
+                  ),
+                  const SizedBox(height: 10),
+                  getTextFormField(
+                      controller:_conUserName,
+                      hintName: 'UserName',
+                      inputType: TextInputType.name,
+                      icon: Icons.person_outline_outlined),
+                  const SizedBox(height: 10),
+                  getTextFormField(
+                      controller: _conEmail,
+                      hintName: 'Email',
+                      inputType: TextInputType.emailAddress,
+                      icon: Icons.mail_outlined),
+                  const SizedBox(height: 10),
+                  getTextFormField(
+                      isObscureText: true,
+                      controller: _conPassword,
+                      hintName: 'Password',
+                      icon: Icons.lock_outline),
+                  const SizedBox(height: 10),
+                 Container(
+                height: 50,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child:  TextButton(
+                  onPressed: update,
+                  child:  const Text(
+                    'Update',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+                  const SizedBox(height: 30),
+                ///DELETE FEATURES
+                  getTextFormField(
                     controller: _conDelUserid,
                     hintName: 'User ID',
                     icon: Icons.person,
-                  isEnable: false,
-                ),
-                const SizedBox(height: 10),
-                getTextFormField(
-                    controller:_conUserName,
-                    hintName: 'UserName',
-                    inputType: TextInputType.name,
-                    icon: Icons.person_outline_outlined),
-                const SizedBox(height: 10),
-                getTextFormField(
-                    controller: _conEmail,
-                    hintName: 'Email',
-                    inputType: TextInputType.emailAddress,
-                    icon: Icons.mail_outlined),
-                const SizedBox(height: 10),
-                getTextFormField(
-                    isObscureText: true,
-                    controller: _conPassword,
-                    hintName: 'Password',
-                    icon: Icons.lock_outline),
-                const SizedBox(height: 10),
-               Container(
-              height: 50,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child:  TextButton(
-                onPressed: update,
-                child:  const Text(
-                  'Update',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
-
-              ///DELETE FEATURES
-                getTextFormField(
-                  controller: _conDelUserid,
-                  hintName: 'User ID',
-                  icon: Icons.person,
-                  isEnable: false,
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  height: 50,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(30),
+                    isEnable: false,
                   ),
-                  child:  TextButton(
-                  onPressed: null,
-                  //delete,
-                    child:  const Text(
-                      'Delete',
-                      style: TextStyle(color: Colors.white),
+                  const SizedBox(height: 30),
+                  Container(
+                    height: 50,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child:  TextButton(
+                    onPressed: delete,
+                    //delete,
+                      child:  const Text(
+                        'Delete',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
-                ),
 
-                  ],
-                ),
+                    ],
+                  ),
+            ),
             ),
         ),
         ),

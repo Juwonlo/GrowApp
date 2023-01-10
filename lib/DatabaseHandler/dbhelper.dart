@@ -9,6 +9,7 @@ import 'dart:async';
 
 
 
+
 class DbHelper {
   static Database? _db ;
 
@@ -83,7 +84,6 @@ class DbHelper {
       var dbClient = await db;
       var res = await dbClient.delete(
         Table_User, where: '$C_UserID = ?' ,whereArgs: [user_id]);
-      print(res);
       return res;
   }
 
