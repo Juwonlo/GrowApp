@@ -16,25 +16,10 @@ showToast(BuildContext context, String msg) {
       //toastLength:
       msg: msg,
       gravity: ToastGravity.CENTER,
-      timeInSecForIosWeb: 1,
+      timeInSecForIosWeb: 2,
       backgroundColor: Colors.green,
       textColor: Colors.white,
       fontSize: 16.0,
   );
 }
 
-
-
-
-
-// if (uid.isEmpty) {
-//   alertDialog(context,"Please Enter User ID");
-// } else if (uname.isEmpty) {
-//   alertDialog(context,"Please Enter User Name");
-// } else if (email.isEmpty) {
-//   alertDialog(context,"Please Enter Email");
-// } else if (passed.isEmpty) {
-//   alertDialog(context,"Please Enter Password");
-// } else if (cpassed.isEmpty) {
-//   alertDialog(context,"Please Confirm Password");
-// }
